@@ -4,66 +4,67 @@ import java.util.Random;
 
 public class ConsumerProducer {
 
-    FIFO fila;
+    private final FIFO fila;
+    private final Random rand = new Random();
 
     public ConsumerProducer(FIFO fila) {
         this.fila = fila;
     }
 
     public void produce() {
-        Random rand = new Random();
         int elemento = 0;
         while (true) {
             synchronized (this) {
-                while (this.fila.cheia()) {
+                while (fila.cheia()) {
                     try {
                         wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                this.fila.enqueue(elemento);
+
+                fila.enqueue(elemento);
                 System.out.println("Elemento " + elemento + " produzido");
+                fila.printFila();
                 elemento++;
                 notify();
             }
 
+            // Espera aleatória entre 0 e 1000 ms
             try {
                 Thread.sleep(rand.nextInt(1000));
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
-
     public void consume() {
-        Random rand = new Random();
-
         int elemento;
         while (true) {
             synchronized (this) {
-                while (this.fila.vazia()) {
+                while (fila.vazia()) {
                     try {
                         wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                elemento = this.fila.dequeue();
-                System.out.println("Elemento " + elemento + " consumido");
-                notify();
 
-                try {
-                    Thread.sleep(rand.nextInt(1000));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                elemento = fila.dequeue();
+                System.out.println("Elemento " + elemento + " consumido");
+                fila.printFila();
+                notify();
+            }
+
+            // Espera aleatória entre 0 e 1000 ms
+            try {
+                Thread.sleep(rand.nextInt(1000));
+                //Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
-
-
-
 }
