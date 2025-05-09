@@ -36,7 +36,6 @@ public class FIFO {
         System.out.print("FILA: [");
 
         for (int i = 0; i < fila.length; i++) {
-            // Calcula o índice real baseado na posição circular
             int index = (cabeca + i) % fila.length;
 
             if (i < qtd_elementos) {
