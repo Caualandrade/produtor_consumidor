@@ -17,23 +17,27 @@ public class ConsumerProducer {
             synchronized (this) {
                 while (fila.cheia()) {
                     try {
+                        System.out.println("[Produtor] Fila cheia. Aguardando...");
                         wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
 
+                System.out.println("[Produtor] Produzindo elemento " + elemento);
                 fila.enqueue(elemento);
-                System.out.println("Elemento " + elemento + " produzido");
+                System.out.println("[Produtor] Elemento " + elemento + " inserido na fila.");
                 fila.printFila();
+
                 elemento++;
+                System.out.println("[Produtor] Notificando consumidor...");
                 notify();
             }
 
-            // Espera aleatória entre 0 e 1000 ms
             try {
-                Thread.sleep(rand.nextInt(1000));
-
+                int sleepTime = rand.nextInt(1000);
+                System.out.println("[Produtor] Dormindo por " + sleepTime + "ms");
+                Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -46,6 +50,7 @@ public class ConsumerProducer {
             synchronized (this) {
                 while (fila.vazia()) {
                     try {
+                        System.out.println("[Consumidor] Fila vazia. Aguardando...");
                         wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -53,15 +58,17 @@ public class ConsumerProducer {
                 }
 
                 elemento = fila.dequeue();
-                System.out.println("Elemento " + elemento + " consumido");
+                System.out.println("[Consumidor] Elemento " + elemento + " consumido.");
                 fila.printFila();
+
+                System.out.println("[Consumidor] Notificando produtor...");
                 notify();
             }
 
-            // Espera aleatória entre 0 e 1000 ms
             try {
-                Thread.sleep(rand.nextInt(1000));
-                //Thread.sleep(1000);
+                int sleepTime = rand.nextInt(1000);
+                System.out.println("[Consumidor] Dormindo por " + sleepTime + "ms");
+                Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

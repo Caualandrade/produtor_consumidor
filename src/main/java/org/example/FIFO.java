@@ -34,18 +34,24 @@ public class FIFO {
 
     public void printFila() {
         System.out.print("FILA: [");
+
         for (int i = 0; i < fila.length; i++) {
-            if ((cabeca <= cauda && i >= cabeca && i < cauda && qtd_elementos != 0) ||
-                    (cabeca > cauda && (i >= cabeca || i < cauda))) {
-                System.out.print(fila[i]);
+            // Calcula o índice real baseado na posição circular
+            int index = (cabeca + i) % fila.length;
+
+            if (i < qtd_elementos) {
+                System.out.print(fila[index]);
             } else {
                 System.out.print("__");
             }
+
             if (i < fila.length - 1) {
                 System.out.print(", ");
             }
         }
+
         System.out.println("]");
     }
+
 
 }
